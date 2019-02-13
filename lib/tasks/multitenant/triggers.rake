@@ -107,6 +107,8 @@ namespace :multitenant do
     ServiceToken.update_all "tenant_id = (SELECT tenant_id FROM services WHERE id = service_id AND tenant_id <> #{MASTER_ID})"
     SSOAuthorization.update_all "tenant_id = (SELECT tenant_id FROM users WHERE id = user_id AND tenant_id <> #{MASTER_ID})"
     ProvidedAccessToken.update_all "tenant_id = account_id WHERE account_id <> #{MASTER_ID}"
+
+    Policy.update_all "tenant_id = (SELECT tenant_id FROM accounts WHERE id = policies.account_id AND tenant_id <> #{MASTER_ID})"
   end
 end
 
