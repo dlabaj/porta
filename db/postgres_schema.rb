@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190104134224) do
+ActiveRecord::Schema.define(version: 20190212111202) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -933,6 +933,18 @@ ActiveRecord::Schema.define(version: 20190104134224) do
   add_index "plans", ["issuer_id", "issuer_type", "type", "original_id"], name: "idx_plans_issuer_type_original", using: :btree
   add_index "plans", ["issuer_id"], name: "fk_contracts_service_id", using: :btree
 
+  create_table "policies", force: :cascade do |t|
+    t.string   "name"
+    t.string   "version"
+    t.binary   "schema"
+    t.integer  "account_id", limit: 8
+    t.integer  "tenant_id",  limit: 8
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "policies", ["account_id"], name: "index_policies_on_account_id", using: :btree
+
   create_table "posts", force: :cascade do |t|
     t.integer  "user_id",        limit: 8
     t.integer  "topic_id",       limit: 8
@@ -1441,6 +1453,7 @@ ActiveRecord::Schema.define(version: 20190104134224) do
 
   add_foreign_key "api_docs_services", "services"
   add_foreign_key "payment_details", "accounts", on_delete: :cascade
+  add_foreign_key "policies", "accounts", on_delete: :cascade
   add_foreign_key "provided_access_tokens", "users"
   add_foreign_key "proxy_configs", "proxies", on_delete: :cascade
   add_foreign_key "proxy_configs", "users", on_delete: :nullify
